@@ -11,6 +11,10 @@ export default defineConfig({
 		})
 	],
 
+	define: {
+		"process.env": process.env,
+	},
+
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	}

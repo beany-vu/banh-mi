@@ -4,21 +4,18 @@ import { lucia } from '$lib/server/auth.js';
 import { redirect } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma.js'; // Ensure this line is correct
 
-// Polyfill for process
-import process from 'process';
-globalThis.process = process;
-
 export const actions = {
-    default:async({request, cookies})=>{
+    default: async({request, cookies})=>{
         const data= await request.formData();
-        const { email, password} = Object.fromEntries(data) as Record<string, string>
+        const { email, password, name} = Object.fromEntries(data) as Record<string, string>
         const userId = generateId(15)
         const hashedPassword = await new Argon2id().hash(password)
         const user = await prisma.user.create({
             data:{
-                id:userId,
-                email:email,
-                password:hashedPassword
+                id: userId,
+                email: email,
+                name: name,
+                password: hashedPassword
             }
         })
         const session = await lucia.createSession(user.id, {});
