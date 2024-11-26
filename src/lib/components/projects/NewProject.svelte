@@ -1,3 +1,6 @@
+<script lang="ts">
+    import { enhance } from '$app/forms';
+</script>
 <aside class="w-full rounded bg-white p-4 shadow-md lg:w-1/4">
     <h2 class="text-xl font-bold">Create a new project</h2>
     <div>

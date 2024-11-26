@@ -1,9 +1,10 @@
 <script lang="ts">
 	export let projects: any[] = [];
+	export let currentLanguage: string = 'en-GB';
 
 	function formatDate(dateString: string) {
 		const date = new Date(dateString);
-		return date.toLocaleString('en-GB', {
+		return date.toLocaleString(currentLanguage, {
 			hour: '2-digit',
 			minute: '2-digit',
 			second: '2-digit',
@@ -29,7 +30,9 @@
 		<tbody>
 			{#each projects as project}
 				<tr>
-					<td class="border border-slate-600 p-4">{project.name}</td>
+					<td class="border border-slate-600 p-4">
+						<a href={`/projects/${project.id}`} class="text-blue-500 hover:underline">{project.name}</a>
+					</td>
 					<td class="border border-slate-600 p-4">{project.description}</td>
 					<td class="border border-slate-600 p-4">{formatDate(project.createdAt)}</td>
 					<td class="border border-slate-600 p-4">{formatDate(project.lastUpdate)}</td>
