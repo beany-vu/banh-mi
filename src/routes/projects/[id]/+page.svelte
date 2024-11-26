@@ -1,28 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
+    import Translation from '$lib/components/projects/Translation.svelte';
 
-	let selectedLocale: string = $state('fr'); // Set initial value to 'en'
+	let selectedLocale: string = $state('en'); // Set initial value to 'en'
     let count = $state(0);
 
 	const data = derived(page, $page => $page.data);
 
     const { project, translations, availableLocales } = $data;
-
-    // const selectedTranslation = derived([translations, selectedLocale], ([$translations, $selectedLocale]) => {
-    //     return $translations.find((t: { locale: string }) => t.locale === $selectedLocale);
-    // });
-
-    function handleLocaleChange(event: Event) {
-        const selectElement = event.target as HTMLSelectElement;
-        selectedLocale = selectElement.value;
-    }
-
-    function setLocaleToFrench() {
-        selectedLocale = 'fr';
-        count ++;
-    }
-    $inspect(selectedLocale);
 </script>
 
 <main>
@@ -40,16 +26,5 @@
         {/each}
     </select>
 
-    <button onclick={setLocaleToFrench}>Set Locale to French</button>
-
-<!-- 
-    {JSON.stringify(selectedTranslation)}
-    {selectedLocale}
-
-    {#if selectedTranslation}
-        <h3>Translation ({selectedLocale}):</h3>
-        <p>{selectedTranslation}</p>
-        {JSON.stringify(selectedTranslation)}
-    {/if} -->
-	<!-- ...existing code... -->
+    <Translation translations={translations} locale={selectedLocale} />
 </main>

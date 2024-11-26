@@ -29,13 +29,25 @@ export const actions: Action = {
         try {
             const data = await request.formData();
             console.log(data);
-            // get user id from session or cookie  or lucia
+            // get user id from session or cookie or lucia
 
             const { session } = await lucia.validateSession(cookies.get(lucia.sessionCookieName));
 
+            const projectName = data.get('name');
+            const existingProject = await prisma.project.findUnique({
+                where: {
+                    name: projectName,
+                    userId: session?.userId
+                }
+            });
+
+            if (existingProject) {
+                return { success: false, error: "Project with this name already exists" };
+            }
+
             const project = {
                 id: Math.random().toString(36).substring(7),
-                name: data.get('name'),
+                name: projectName,
                 description: data.get('description'),
                 createdAt: new Date().toISOString(),
                 lastUpdate: new Date().toISOString(),
@@ -45,7 +57,6 @@ export const actions: Action = {
 
             // insert project into database
             await prisma.project.create({ data: project });
-            console.log(project);
 
             return { success: true, message: "Project created successfully" };
         } catch (error) {
