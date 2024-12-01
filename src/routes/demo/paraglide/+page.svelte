@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AvailableLanguageTag } from '$lib/paraglide/runtime';
+	import type { AvailableLanguageTag } from '$lib/paraglide/runtime.js';
 	import { i18n } from '$lib/i18n';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';

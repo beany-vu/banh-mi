@@ -17,15 +17,15 @@ export const load: Load = async ({ params }) => {
 			}
 		});
 
-        const translations = await prisma.translation.findMany({
-            where: {
-                projectId: params.id
-            }
-        });
+		const translations = await prisma.translation.findMany({
+			where: {
+				projectId: params.id
+			}
+		});
 
-        const availableLocales = translations.map(t=>t.locale);
+		const availableLocales = translations.map((t) => t.locale);
 
-		return { project, translations, availableLocales};
+		return { project, translations, availableLocales };
 	} catch (error) {
 		console.error(error);
 		return { project: null, translations: [] };

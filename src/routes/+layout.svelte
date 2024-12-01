@@ -5,7 +5,6 @@
 
 	let { data, children } = $props<{ user: any; children: any }>();
 	let user = data.user;
-
 </script>
 
 <div class="layout">
@@ -32,10 +31,9 @@
 	.layout {
 		display: flex;
 		flex-direction: column;
-		gap: 50px;
 	}
 	nav {
-		/* Add your styles here */
+		background: theme('colors.primary');
 	}
 	.main-content {
 		flex-grow: 1;

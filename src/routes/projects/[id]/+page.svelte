@@ -1,30 +1,34 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
-    import Translation from '$lib/components/projects/Translation.svelte';
+	import Translation from './components/LocaleText.svelte';
+	import TranslationSummary from './components/Summary.svelte';
+	import Locales from './components/Locales.svelte';
 
 	let selectedLocale: string = $state('en'); // Set initial value to 'en'
-    let count = $state(0);
 
-	const data = derived(page, $page => $page.data);
+	const data = derived(page, ($page) => $page.data);
 
-    const { project, translations, availableLocales } = $data;
+	const { project, translations, availableLocales } = $data;
+
+	function handleLocaleChange(event: CustomEvent) {
+		selectedLocale = event.detail;
+	}
 </script>
 
 <main>
-	<h2>{project.name} {selectedLocale} {count}</h2>
-    {selectedLocale}
-	<p>{project.description}</p>
-	<p>Created At: {project.createdAt}</p>
-    <p>Last Update: {project.lastUpdate}</p>
-
-    <label for="locale-select">Select Locale:</label>
-    <select id="locale-select" bind:value={selectedLocale}>
-        <option value="" disabled>Select a locale</option>
-        {#each availableLocales as locale}
-            <option value={locale}>{locale}</option>
-        {/each}
-    </select>
-
-    <Translation translations={translations} locale={selectedLocale} />
+	<TranslationSummary
+		name={project.name}
+		description={project.description}
+		createdAt={project.createdAt}
+		lastUpdate={project.lastUpdate}
+		on:localeChange={handleLocaleChange}
+	/>
+	<Locales
+		{availableLocales}
+		{selectedLocale}
+		on:localeChange={handleLocaleChange}
+		projectId={project.id}
+	/>
+	<Translation {translations} locale={selectedLocale} />
 </main>

@@ -1,12 +1,11 @@
-
 {
-  "compilerOptions": {
-    // ...existing code...
-    "baseUrl": ".",
-    "paths": {
-      "$lib/*": ["src/lib/*"]
-    }
-    // ...existing code...
-  }
-  // ...existing code...
+	"compilerOptions": {
+		// ...existing code...
+		"baseUrl": ".",
+		"paths": {
+			"$lib/*": ["src/lib/*"]
+		}
+		// ...existing code...
+	}
+	// ...existing code...
 }

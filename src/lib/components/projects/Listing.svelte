@@ -31,7 +31,9 @@
 			{#each projects as project}
 				<tr>
 					<td class="border border-slate-600 p-4">
-						<a href={`/projects/${project.id}`} class="text-blue-500 hover:underline">{project.name}</a>
+						<a href={`/projects/${project.id}`} class="text-blue-500 hover:underline"
+							>{project.name}</a
+						>
 					</td>
 					<td class="border border-slate-600 p-4">{project.description}</td>
 					<td class="border border-slate-600 p-4">{formatDate(project.createdAt)}</td>

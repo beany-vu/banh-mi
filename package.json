@@ -32,6 +32,9 @@
 		".": {
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js"
+		},
+		"./lucia-auth": {
+			"svelte": "./node_modules/lucia-auth/index.js"
 		}
 	},
 	"peerDependencies": {
@@ -78,8 +81,12 @@
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",
+		"cldr-core": "^46.0.0",
+		"cldr-localenames-full": "^46.0.0",
+		"daisyui": "^4.12.14",
 		"lucia": "^3.2.2",
 		"lucia-auth": "^0.1.0",
+		"lucide-svelte": "^0.462.0",
 		"oslo": "^1.2.1"
 	}
 }
