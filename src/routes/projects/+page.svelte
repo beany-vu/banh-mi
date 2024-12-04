@@ -1,16 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import Listing from '$lib/components/projects/Listing.svelte';
 	import NewProject from '$lib/components/projects/NewProject.svelte';
 
 	let projects: any[] = [];
 
-	$: {
-		const { data } = $page;
-		projects = data.projects;
-	}
+	onMount(async () => {
+		try {
+			const response = await fetch('/api/projects');
+			if (response.ok) {
+				const data = await response.json();
+				projects = data.projects;
+			} else {
+				console.error('Failed to fetch projects');
+			}
+		} catch (error) {
+			console.error('Error fetching projects:', error);
+		}
+	});
 </script>
 
 <div class="container mx-auto rounded border-0 bg-sky-100 p-10">

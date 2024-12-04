@@ -63,6 +63,7 @@
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.6",
 		"prettier-plugin-tailwindcss": "^0.6.5",
+		"prettier-plugin-sql": "^0.0.3",
 		"prisma": "^5.22.0",
 		"publint": "^0.2.0",
 		"storybook": "^8.4.5",
@@ -87,6 +88,7 @@
 		"lucia": "^3.2.2",
 		"lucia-auth": "^0.1.0",
 		"lucide-svelte": "^0.462.0",
-		"oslo": "^1.2.1"
+		"oslo": "^1.2.1",
+		"svelte-select": "^5.8.3"
 	}
 }

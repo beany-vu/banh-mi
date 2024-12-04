@@ -1,54 +1,25 @@
 <script lang="ts">
+	import Select from 'svelte-select';
 	export let items: { value: string; name: any }[] = [];
-	export let selectedItem: string = '';
+	export let selectedItem: { value: string; name: any } = { value: '', name: '' };
 	export let placeholder: string = '';
 	export let onChange: (value: string) => void;
 
-	$: inputVal = items.find((item) => item.value === selectedItem)?.name || '';
-
-	const onItemClicked = (item: { value: string; name: any }) => {
-		if (document.activeElement instanceof HTMLElement) {
-			document.activeElement.blur();
-		}
-		selectedItem = item.value;
-		inputVal = '';
-		onChange(item.value);
+	const handleChange = (selected: any) => {
+		onChange(selectedItem.value);
 	};
-	const onDeleteInput = () => {
-		inputVal = '';
-		selectedItem = '';
-		onChange('');
-	};
-
-	$: filteredItems = items.filter(function (item: { value: string; name: any }) {
-		const tempDiv = document.createElement('div');
-		tempDiv.innerHTML = item.name;
-		const textValue = tempDiv.textContent || tempDiv.innerText || '';
-		return textValue.toLowerCase().includes(inputVal.toLowerCase());
-	});
 </script>
 
-<div class="dropdown">
-	<input
-		class="input input-bordered"
-		{placeholder}
-		bind:value={inputVal}
-		on:change={() => onDeleteInput()}
-	/>
-	<ul
-		class="menu dropdown-content z-[1] mt-1 max-h-80 w-full flex-nowrap overflow-auto rounded-box bg-base-100 p-2 shadow"
-	>
-		{#each filteredItems as item}
-			<li>
-				<button type="button" class="locale-code" on:click={() => onItemClicked(item)}
-					>{@html item.name}</button
-				>
-			</li>
-		{/each}
-	</ul>
+<div class="select-container">
+	<Select {items} bind:value={selectedItem} {placeholder} on:change={handleChange} />
 </div>
 
 <style>
+	.select-container {
+		display: inline-block;
+		min-width: 300px;
+		vertical-align: middle;
+	}
 	ul {
 		padding: 0;
 	}

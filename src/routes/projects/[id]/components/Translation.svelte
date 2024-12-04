@@ -1,14 +1,13 @@
 <script lang="ts">
 	import { selectedLocale } from '$lib/stores/project.js';
-	import { onMount } from 'svelte';
 	export let translations: any[] = [];
 	export let defaultLocale = 'en';
+	export let projectId: string;
+	let editedContent: { [key: string]: any } = {};
 
 	$: currentLocale = $selectedLocale ?? defaultLocale;
 	$: selectedTranslation = translations?.find((t) => t.locale === currentLocale);
 	$: content = selectedTranslation?.content;
-
-	let editedContent: { [key: string]: any } = {};
 
 	const editContent = (path: string, value: string): void => {
 		const keys = path.split('.');
@@ -27,19 +26,60 @@
 	};
 
 	// path is something like key.property1.property1-1
+	let debounceTimeout: NodeJS.Timeout;
+
 	const updateEditedContent = (path: string, value: string): void => {
-		editContent(path, value);
+		if (debounceTimeout) {
+			clearTimeout(debounceTimeout);
+		}
+		debounceTimeout = setTimeout(() => {
+			console.log({ path, value });
+			editContent(path, value);
+			editedContent = { ...editedContent }; // Trigger reactivity
+		}, 300); // Adjust the debounce delay as needed
 	};
 
-	onMount(() => {
-		console.log({ currentLocale: $selectedLocale });
-	});
+	async function saveTranslation() {
+		try {
+			const response = await fetch(`/api/translations`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					id: selectedTranslation.id,
+					projectId,
+					locale: currentLocale,
+					payload: editedContent
+				})
+			});
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			const result = await response.json();
+			if (result.success) {
+				console.log('Translation saved successfully:', result);
+				alert('Translation saved successfully');
+			} else {
+				alert('Failed to save translation');
+			}
+		} catch (error) {
+			console.error('Error saving translation:', error);
+			alert('Server error, please try again later');
+		}
+	}
 </script>
 
 {#if selectedTranslation}
 	<div class="block-translation container mx-auto justify-center">
-		<div class="flex justify-end">
-			<button class="btn btn-success">Save</button>
+		<div class="block-translation-actions flex justify-end">
+			<button
+				class="btn btn-primary"
+				on:click={() => {
+					console.log('Save', editedContent);
+					saveTranslation();
+				}}>Save</button
+			>
 		</div>
 		<div class="item-header mb-4 flex gap-3">
 			<div class="w-full max-w-xs text-center">Key</div>
@@ -69,6 +109,14 @@
 					class="input input-bordered input-primary w-full max-w-xs"
 					value={message}
 					name={`${currentLocale}.${key}.${message}`}
+					on:input={(e) => {
+						if (e.target) {
+							updateEditedContent(
+								`${currentLocale}.${key}`,
+								(e.target as HTMLTextAreaElement).value
+							);
+						}
+					}}
 				></textarea>
 				<div>
 					<div class="mx-1 my-1 flex items-center">
@@ -104,6 +152,9 @@
 		border-radius: 5px;
 		overflow: hidden;
 		margin: 50px auto;
+	}
+	.block-translation-actions {
+		padding: 1rem;
 	}
 	.item {
 		padding: 1rem;

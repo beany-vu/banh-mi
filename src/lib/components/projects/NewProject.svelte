@@ -1,11 +1,28 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	async function handleSubmit(event: Event) {
+		event.preventDefault();
+		const form = event.target as HTMLFormElement;
+		const formData = new FormData(form);
+
+		const response = await fetch('/api/projects', {
+			method: 'POST',
+			body: formData
+		});
+
+		if (response.ok) {
+			// Handle successful response
+			console.log('Project created successfully');
+		} else {
+			// Handle error response
+			console.error('Failed to create project');
+		}
+	}
 </script>
 
 <aside class="w-full rounded bg-white p-4 shadow-md lg:w-1/4">
 	<h2 class="text-xl font-bold">Create a new project</h2>
 	<div>
-		<form action="/projects" method="post" use:enhance>
+		<form on:submit={handleSubmit}>
 			<div class="mb-4">
 				<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
 				<input

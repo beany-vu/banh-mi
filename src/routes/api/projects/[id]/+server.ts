@@ -1,7 +1,6 @@
 import { prisma } from '$lib/server/prisma.js';
-import type { Load } from '@sveltejs/kit';
 
-export const load: Load = async ({ params }) => {
+export const GET = async ({ params }) => {
 	try {
 		const project = await prisma.project.findUnique({
 			where: { id: params.id },
@@ -25,9 +24,18 @@ export const load: Load = async ({ params }) => {
 
 		const availableLocales = translations.map((t) => t.locale);
 
-		return { project, translations, availableLocales };
-	} catch (error) {
-		console.error(error);
-		return { project: null, translations: [] };
+		return new Response(JSON.stringify({ project, translations, availableLocales }), {
+			status: 200,
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+	} catch {
+		return new Response(JSON.stringify({ project: null, translations: [] }), {
+			status: 500,
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
 	}
 };

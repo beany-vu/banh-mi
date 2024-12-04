@@ -20,12 +20,12 @@
 		setSelectedLocale(locale);
 	};
 
-	let languages: { value: string; name: any }[] = [];
+	let languages: { value: string; label: any }[] = [];
 
 	onMount(() => {
 		languages = Object.keys(languagesObj).map((key) => ({
 			value: key,
-			name: `${languagesObj[key]} (${key})`
+			label: `${languagesObj[key]} (${key})`
 		}));
 	});
 
@@ -33,8 +33,8 @@
 
 	async function applyNewLocales() {
 		try {
-			const response = await fetch(`/projects/${projectId}`, {
-				method: 'PATCH',
+			const response = await fetch(`/api/translations`, {
+				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
@@ -43,16 +43,14 @@
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
-			const result = await response.json();
-			if (result.success) {
-				console.log('New locales added successfully:', result);
-				if (result.status === 201) {
-					availableLocales = [...availableLocales, ...newLocale].sort();
-					setSelectedLocale('');
-				}
-				alert('New locales added successfully');
-			} else {
-				alert('Failed to add new locales');
+			const status = await response.status;
+			switch (status) {
+				case 201:
+					availableLocales = [...availableLocales, newLocale].sort();
+					alert('New locales added successfully');
+					break;
+				default:
+					alert('Server error, please try again later');
 			}
 		} catch (error) {
 			console.error('Error adding new locales:', error);
@@ -82,10 +80,10 @@
 		Or add new locale:
 		<ComboBox
 			items={languages}
-			selectedItem={newLocale}
 			onChange={(value) => onNewLocaleSelected(value)}
 			placeholder="Choose a new locale"
 		/>
+
 		<button
 			class="btn btn-primary"
 			on:click={applyNewLocales}
